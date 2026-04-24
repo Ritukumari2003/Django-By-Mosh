@@ -2,6 +2,19 @@ from django.db import models
 
 # Create your models here.
 
+# Models Explaination :- 48:00
+# one-to-many relationship between Product(title, description, unit_price, inventory, updated_at,collection, promotions) and Collection(title, featured_product)
+# many-to-many realtionship between Product and Cart(created_at) 
+# CartItem(quantity) is representing the many-to-many relationship between Product and Cart through quantity attribute, it is call association class
+# Instead of creating the CartItem model as association class of Product and Cart, We can also create one-to-many relationship between (Product and CartItem) and (Cart and CartItem)
+# one-to-many relationship between Customer(name,email) and Order(placed_at)
+# many-to-many relationship between Order and Product, OrderItem(quantity) will be association class or we can create one-to-many relationship between (Product and OrderItem) and (Order and OrderItem) like we did in CartItem
+# the store and tag are two different apps and we will be creating zero coupling between these apps.
+# many-to-many relationship between Product and Tag(label), TagITem(quantity) will be association class
+
+# Django Field Types : https://docs.djangoproject.com/en/6.0/ref/models/fields/
+
+
 class Promotion(models.Model):
     desctiption = models.CharField(max_length=255)
     discount = models.FloatField()
@@ -15,11 +28,11 @@ class Collection(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(default='-')
     description = models.TextField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     inventory = models.IntegerField()
-    last_update = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     ############### Creating One-To-Many Relationship #############
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
@@ -41,16 +54,12 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=10) 
+    phone = models.CharField(max_length=20) 
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
-    class Meta:
-        db_table = 'store_customers'
-        indexes = [
-            models.Index(fields=['last_name', 'first_name'])
-        ]
 
+############ Order ###################
 class Order(models.Model):
     PAYMENT_STATUS_PENDING = 'P'
     PAYMENT_STATUS_COMPLETE = 'C'
@@ -84,9 +93,9 @@ class Address(models.Model):
     ############### Creating One-To-Many Relationship #############
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
-    zip_code = models.CharField(max_length=6)
+    zip_code = models.CharField(max_length=6, default='999999')
 
-
+########## Cart ############
 class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 

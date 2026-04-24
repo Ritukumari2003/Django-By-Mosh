@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if name %}
+    <h1>Hello {{ name }}</h1>
+    {% else %}
+    <h1>Hello World</h1>
+    {% endif %}
+    <ul>
+        {% comment %} {% for product in products %}
+        <li>{{ product.title }}</li>
+        {% comment %} <li>{{ product }}</li> {% endcomment %}
+        {% comment %} <li>{{ product.title }} - {{ product.collection.title }} </li>
+        {% endfor %} {% endcomment %} 
+
+        {% comment %} # ----------------------------------------------------------------------------- {% endcomment %}
+
+        {% comment %} {% for order in orders %}
+        <li>{{ order.id }} - {{ order.customer.first_name }} </li>
+        {% endfor %} {% endcomment %}
+
+        {% comment %} # ----------------------------------------------------------------------------- {% endcomment %}
+        {% comment %} {{ result }} {% endcomment %}
+    </ul>
+</body>
+</html>
