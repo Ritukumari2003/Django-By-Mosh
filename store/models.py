@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-# Models Explaination :- 48:00
+# Models Explaination :- 00:48:00
 # one-to-many relationship between Product(title, description, unit_price, inventory, updated_at,collection, promotions) and Collection(title, featured_product)
 # many-to-many realtionship between Product and Cart(created_at) 
 # CartItem(quantity) is representing the many-to-many relationship between Product and Cart through quantity attribute, it is call association class
@@ -12,7 +12,10 @@ from django.db import models
 # the store and tag are two different apps and we will be creating zero coupling between these apps.
 # many-to-many relationship between Product and Tag(label), TagITem(quantity) will be association class
 
+# We specify parent in the child class while creating relationships 
+
 # Django Field Types : https://docs.djangoproject.com/en/6.0/ref/models/fields/
+# Django Model Metadata: https://docs.djangoproject.com/en/6.0/ref/models/options/
 
 
 class Promotion(models.Model):
@@ -23,14 +26,14 @@ class Collection(models.Model):
     title = models.CharField(max_length=255)
 
     ############### Circular Dependency/ Reverse Relationship : Product and Collections ###############    
-    # featured_product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True
+    # featured_product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(default='-')
     description = models.TextField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2) # 9999.99
     inventory = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -88,7 +91,7 @@ class Address(models.Model):
     city = models.CharField(max_length=255)
 
     ############### Creating One-To-One Relationship #############
-    # customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+    # customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)    # primary_key aregument will create one-to-one relationship
 
     ############### Creating One-To-Many Relationship #############
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -104,13 +107,4 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveBigIntegerField()
-
-
-
-
-
     
-
-
-
-
