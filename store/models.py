@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -38,8 +39,12 @@ class Collection(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(default='-')
-    description = models.TextField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2) # 9999.99
+    description = models.TextField(null = True, blank=True)
+    unit_price = models.DecimalField(
+        max_digits=6, 
+        decimal_places=2,
+        validators=[MinValueValidator(1)]
+        ) # 9999.99
     inventory = models.IntegerField()
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,7 +52,7 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
 
     ############### Creating Many-To-Many Relationship #############
-    promotions = models.ManyToManyField(Promotion)
+    promotions = models.ManyToManyField(Promotion, blank = True)
     
     def __str__(self)->str:
         return self.title

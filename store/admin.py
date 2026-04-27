@@ -6,6 +6,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from . import models
 # Register your models here.
+# Django Model Admin: https://docs.djangoproject.com/en/6.0/ref/contrib/admin/#modeladmin-options
 
 class InventoryFilter(admin.SimpleListFilter):
     title = 'inventory'
@@ -24,13 +25,20 @@ class InventoryFilter(admin.SimpleListFilter):
 ################# Customising the List Page: 03:59:22 ###############
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['collection']
+    prepopulated_fields = {
+        'slug': ['title']
+    }
     actions = ['clear_inventory']
+    # exclude = ['promotions']
+    # readonly_fields = ['title']
     list_display = ['title', 'unit_price','inventory_status', 'collection_title']
     list_editable = ['unit_price']
     ####### Adding filter to the List Page: 04:19:09 #######
     list_filter = ['collection', 'updated_at', InventoryFilter]
     list_per_page = 10
     list_select_related = ['collection']
+    search_fields = ['title']
 
     def collection_title(self, product): return product.collection.title 
 
@@ -54,6 +62,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
+    search_fields = ['title']
 
     @admin.display(ordering='products_count')
     def products_count(self, collection): 
@@ -74,6 +83,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
+    
     list_display = ['first_name', 'last_name', 'membership']
     list_editable = ['membership']
     list_per_page = 10
@@ -81,9 +91,19 @@ class CustomerAdmin(admin.ModelAdmin):
     ####### Adding Search to the List Page: 04:17:16 #######
     search_fields = ['first_name__istartswith', 'last_name__istartswith']
 
+class OrderItemInline(admin.StackedInline):
+    autocomplete_fields = ['product']
+    model = models.OrderItem
+    min_num = 1
+    max_num = 10
+    extra = 0
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['customer']
     list_display = ['id', 'placed_at', 'customer']
+    inlines = [OrderItemInline]
+    search_fields = ['customer']
 
 
 # admin.site.register(models.Collection)
