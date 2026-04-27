@@ -5,6 +5,7 @@ from django.db.models import QuerySet, Count
 from django.utils.html import format_html
 from django.urls import reverse
 from . import models
+
 # Register your models here.
 # Django Model Admin: https://docs.djangoproject.com/en/6.0/ref/contrib/admin/#modeladmin-options
 
@@ -20,6 +21,13 @@ class InventoryFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == '<10':
             return queryset.filter(inventory__lt=10)
+        
+# --------------------------------------------------------------------
+############ Will Require dependency for generic class implementation here ###############
+# class TagInline(GenericTabularInline):
+#     autocomplete_fields = ['tag']
+#     model = TaggedItem
+#     extra = 1   # optional, adds empty rows
 
 # --------------------------------------------------------------------
 ################# Customising the List Page: 03:59:22 ###############
@@ -32,6 +40,7 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ['clear_inventory']
     # exclude = ['promotions']
     # readonly_fields = ['title']
+    # inlines = [TagInline]
     list_display = ['title', 'unit_price','inventory_status', 'collection_title']
     list_editable = ['unit_price']
     ####### Adding filter to the List Page: 04:19:09 #######

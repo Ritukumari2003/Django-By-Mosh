@@ -16,6 +16,9 @@ class TaggedItemManager(models.Manager):
 # Create your models here.
 class Tag(models.Model):
     label = models.CharField(max_length = 255)
+    
+    def __str__(self):
+         return self.label
 
 class TaggedItem(models.Model):
     objects = TaggedItemManager()   # For Generic Query
