@@ -106,7 +106,7 @@ def say_hello(request):
     # )
 
     # -----------------------------------------------------------------------------
-    ################### Expression Wrapper ##################
+    ################### Expression Wrapper: 03:19:00 ##################
     # discounted_price = ExpressionWrapper(
     #     F('unit_price')*0.8, output_field=DecimalField()
     # )
@@ -115,7 +115,7 @@ def say_hello(request):
     # )
 
     # -----------------------------------------------------------------------------
-    ################### Querying the generic classes : 03:19:00 ###################
+    ################### Querying the generic relationship : 03:22:00 ###################
     # content_type = ContentType.objects.get_for_model(Product)
     # query_set = TaggedItem.objects\
     #     .select_related('tag')\

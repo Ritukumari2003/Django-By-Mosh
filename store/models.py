@@ -29,6 +29,12 @@ class Collection(models.Model):
     # featured_product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
 
+    ############ for Admin Panel : 03:55:00 ############
+    def __str__(self)->str:
+        return self.title
+    class Meta:
+        ordering = ['title']
+
 class Product(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(default='-')
@@ -42,6 +48,11 @@ class Product(models.Model):
 
     ############### Creating Many-To-Many Relationship #############
     promotions = models.ManyToManyField(Promotion)
+    
+    def __str__(self)->str:
+        return self.title
+    class Meta:
+        ordering = ['title']
 
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = 'B'
@@ -60,6 +71,12 @@ class Customer(models.Model):
     phone = models.CharField(max_length=20) 
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+    
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
 
 ############ Order ###################
