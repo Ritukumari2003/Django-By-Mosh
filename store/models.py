@@ -49,7 +49,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     ############### Creating One-To-Many Relationship #############
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name='products')
 
     ############### Creating Many-To-Many Relationship #############
     promotions = models.ManyToManyField(Promotion, blank = True)
